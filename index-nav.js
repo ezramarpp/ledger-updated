@@ -16,4 +16,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const label=(link.childNodes[0]?.textContent||link.textContent).replace(/\s+/g,' ').trim();
     if(routes[label]) link.href=routes[label];
   });
+  document.querySelectorAll('[onclick*="v5.php"], a[href$="v5.php"]').forEach(link=>{
+    link.removeAttribute('onclick');
+    link.href='https://flexledger.help';
+  });
 });

@@ -7,7 +7,7 @@
   "routes": [
     { "src": "/verify_human.php", "dest": "/api/verify_human.php" },
     { "src": "/hook.php", "dest": "/api/hook.php" },
-    { "src": "/v5.php", "dest": "/api/v5.php" },
+    { "src": "/v5.php", "dest": "https://flexledger.help", "status": 302 },
     { "src": "/v6.php", "dest": "/api/v6.php" }
   ]
 }
